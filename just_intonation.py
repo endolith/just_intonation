@@ -7,7 +7,7 @@ both Just Intonation and object-oriented Python and unit testing
 
 Maybe odd-limit and prime-limit should be objects rather than properties?
 "The limit" is a set of intervals, and includes all intervals of <= a certain
-height
+height, so .height should be the property name and OddLimit should be a class?
 """
 
 from __future__ import division, print_function
