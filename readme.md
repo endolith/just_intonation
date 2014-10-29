@@ -7,8 +7,8 @@ Probably all of this is redundant with [Scala](http://www.huygens-fokker.org/sca
  * unit testing
 
 Maybe odd-limit and prime-limit should be objects rather than properties?
-"The limit" is a set of intervals, and includes all intervals of <= a certain
-height, so .height should be the property name and OddLimit should be a class?
+"The limit" is a set of intervals, and includes all intervals of `<=` a certain
+height, so `.height` should be the property name and `OddLimit` should be a class?
 
 Examples:
 
