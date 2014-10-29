@@ -2,12 +2,7 @@
 """
 Created on Wed Jul 30 18:55:13 2014
 
-Probably all of this is redundant with Scala, but I wanted to learn by doing,
-both Just Intonation and object-oriented Python and unit testing
-
-Maybe odd-limit and prime-limit should be objects rather than properties?
-"The limit" is a set of intervals, and includes all intervals of <= a certain
-height, so .height should be the property name and OddLimit should be a class?
+Just intonation classes for music theory experiments in Python
 """
 
 from __future__ import division, print_function
