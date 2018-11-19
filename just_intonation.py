@@ -1,16 +1,15 @@
-# -*- coding: utf-8 -*-
 """
 Created on Wed Jul 30 18:55:13 2014
 
 Just intonation classes for music theory experiments in Python
 """
 
-from __future__ import division, print_function
-from fractions import gcd as _gcd
+from math import gcd as _gcd
 from fractions import Fraction
 from numbers import Rational
 from itertools import combinations
 import math
+from functools import reduce
 
 try:
     from math import log2
@@ -203,7 +202,7 @@ class Interval(object):
                 self._denominator = rational.denominator
                 return
 
-            elif isinstance(numerator, basestring):
+            elif isinstance(numerator, str):
                 """
                 Construction from strings
 
@@ -538,7 +537,7 @@ class Interval(object):
         """a >= b"""
         return _F(a) >= _F(b)
 
-    def __nonzero__(a):
+    def __bool__(a):
         """a != 0"""
         return True
 
@@ -548,7 +547,7 @@ class Interval(object):
 
     def __long__(a):
         """long(a)"""
-        return long(a._numerator / a._denominator)
+        return int(a._numerator / a._denominator)
 
     def __float__(a):
         """float(a)"""
@@ -681,7 +680,7 @@ class Pitch(object):
         """a >= b"""
         return a._frequency >= b.frequency
 
-    def __nonzero__(a):
+    def __bool__(a):
         """a != 0"""
         return a._frequency != 0
 
@@ -699,7 +698,7 @@ class Pitch(object):
 
     def __long__(a):
         """int(a)"""
-        return long(a._frequency)
+        return int(a._frequency)
 
     def __float__(a):
         """float(a)"""
@@ -810,7 +809,7 @@ class Chord():
         Constructs a musical chord from a series of intervals relative to
         the root
         """
-        if len(args) == 1 and isinstance(args[0], basestring):
+        if len(args) == 1 and isinstance(args[0], str):
             """
             Handle construction from a single string of (possibly fractional)
             terms:
@@ -1187,7 +1186,7 @@ def test_interval():
         (81, 64): (81, 3),
         (243, 128): (243, 3),
         }
-    for interval, (odd_limit, prime_limit) in limits.iteritems():
+    for interval, (odd_limit, prime_limit) in limits.items():
         assert Interval(*interval).odd_limit == odd_limit
         assert Interval(*interval).prime_limit == prime_limit
 
