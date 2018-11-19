@@ -294,6 +294,16 @@ def test_interval():
     with pytest.raises(TypeError, match='should be a string or a Rational'):
         Interval([1, 2])
 
+    # Invalid operations
+    # ~Interval('P5') should fail  # bitwise __invert__
+    # round floor ceil should fail?  or should return ints like
+    # floor(Fraction(5,4))?
+    # should bit shift raise by an octave??
+
+    # odd_limit can't handle 2, 2
+    assert Interval('2:2').odd_limit == 1
+
+    assert Interval(6, 5) + P8 == Interval(12, 5)
 
 def test_pitch():
     # Construction
@@ -339,6 +349,12 @@ def test_pitch():
 
     with pytest.raises(TypeError, match='unsupported operand type'):
         Pitch(440) - 440
+
+    # Invalid operations
+    # Pitch(300) * / // % 2 raises math error?
+    # Pitch(554.37) - Pitch(440) raises error?  "can't find Just interval"?
+    # Interval() + Pitch() doesn't make sense?  because pitch is absolute and
+    # interval is relative.  like saying 5 dB + 0 dBu.
 
 
 def test_chord():
@@ -391,6 +407,16 @@ def test_chord():
     assert Chord(4, 5, 6, 7).inversion(3) == Chord(7, 8, 10, 12)
     assert Chord(4, 5, 6, 7).inversion(4) == Chord(4, 5, 6, 7)
     assert Chord(-P5, +P5).inversion(1) == Chord(P4, P5) == Chord(6, 8, 9)
+
+    # TODO: shifting chord's root note could be done by subtracting an
+    # interval?
+
+#    assert Chord(M3, P5) - M3 == Chord(-M3, m3)
+#    assert Chord(M3, P5) - P5 == Chord(-P5, -m3)
+#    assert Chord(P5) - M3 # not possible because there'd be no root
+#    raise ValueError('Shifting by {} would leave nothing at the root')
+# TODO: can do the same thing by a .newroot(0) method though. or whatever the
+# official musical terminology is
 
     # Negation
     assert (-Chord(1, 2, 3)).intervals == (Interval(1, 3), Interval(1, 2))
@@ -445,12 +471,15 @@ def test_chord():
     with pytest.raises(ValueError, match='not understood'):
         Chord([4, 5, 6])
 
+#  assert Chord('9/8-5/4-4/3-3/2-5/3-15/8-2') == Chord(1, 3, 5, 9, 15, 27, 45)
+
 
 if __name__ == "__main__":
     # Test doctests
     import doctest
     doctest.testmod()
     # TODO: this is screwing up IPython's _
+    # TODO: UnicodeDecodeError
 
     # Test assertions
     import pytest

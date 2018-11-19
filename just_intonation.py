@@ -1,6 +1,20 @@
 """
 Classes for Just intonation music theory experiments in Python.
 
+Terminology:
+
+Chord: A collection of 2 or more notes
+    Dyad: A collection of 2 notes
+    Trichord: A collection of 3 notes (more general than triad)
+    Triad: A set of three notes that can be stacked in thirds
+    Tetrachord: A collection of 4 notes
+    etc
+Interval: The distance between 2 notes
+Note: A sounded pitch?  Pitches in a chord? Written notation for pitches?
+Pitch: A particular frequency of sound
+Tone: A sine frequency or single partial of a note/pitch
+Overtone: A tone that is not the fundamental
+
 Created on Wed Jul 30 18:55:13 2014
 """
 
@@ -45,6 +59,25 @@ abbreviations = {
     # 9:5 "large just minor seventh" = m7_5 in FJS
     'M7':  (15, 8),
     'P8':  (2, 1),
+    }
+
+
+# probably should write it like this as it is more unambiguous?:
+# or write it as a YAML file?
+
+intervals = {
+    (1, 1):     {'abbr': ('P1',),
+                 'names': ('Unison', 'Prime',)},
+    (16, 15):   {'abbr': ('m2',),
+                 'names': ('Minor second',)},
+    (9, 8):     {'abbr': ('M2',),
+                 'names': ('Major second',)},
+    (7, 6):     {'abbr': ('s3', 'sm3'),
+                 'names': ('Septimal minor third',)},
+    (8, 5):     {'abbr': ('m6'),
+                 'names': ('Minor sixth',)},
+    (11, 7):    {'abbr': ('m6'),
+                 'names': ('Undecimal minor sixth', 'Minor sixth',)},
     }
 
 
@@ -198,6 +231,8 @@ class Interval(object):
         """
         if numerator == 0:
             raise ValueError('No such thing as 0 interval')
+            # TODO: Need exceptions for inf and nan etc?  or they will raise
+            # errors on their own?
 
         if denominator is None:
             if isinstance(numerator, Interval):
@@ -391,6 +426,17 @@ class Interval(object):
         ref: http://www.plainsound.org/pdfs/JC&ToH.pdf
         """
         return log2(a._numerator * a._denominator)
+
+# But which order to put them in?!  Same as Chords?
+#    @property
+#    def terms(a):
+#        """
+#        Terms of the ratio
+#        """
+#        return a._numerator, a._denominator
+
+    # TODO: should have a .name?
+    # TODO: should have a .fraction that produces a Fraction object?
 
     def __repr__(self):
         """
@@ -680,6 +726,7 @@ class Pitch(object):
             return Pitch(a._frequency * _F(b))
         else:
             return NotImplemented
+    # radd sort of makes sense?  but is awkward, like saying "5 dB + 0 dBu"
 
     def __sub__(a, b):
         if isinstance(b, Interval):
@@ -1040,6 +1087,7 @@ class Chord():
         inversion moves that tone up an octave, etc.
         """
         x = self
+        # TODO: makes sense to go negative?
         for step in range(n):
             terms = list(x._terms)
             if terms[0] < terms[1]:
