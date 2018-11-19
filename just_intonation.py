@@ -4,7 +4,7 @@ Created on Wed Jul 30 18:55:13 2014
 Just intonation classes for music theory experiments in Python
 """
 
-from math import gcd as _gcd
+import math
 from fractions import Fraction
 from numbers import Rational
 from itertools import combinations
@@ -40,16 +40,24 @@ abbreviations = {
     }
 
 
+def _lcm(a, b):
+    return (a * b) // math.gcd(a, b)
+
+
+def gcd_rationals(a, b):
+    num_gcd = math.gcd(a.numerator, b.numerator)
+    denom_lcm = _lcm(a.denominator, b.denominator)
+    return Fraction(num_gcd, denom_lcm)
+
+
 def gcd(*numbers):
     """Return the greatest common divisor of the given integers"""
-    return reduce(_gcd, numbers)
+    return reduce(gcd_rationals, numbers)
 
 
 def lcm(*numbers):
     """Return lowest common multiple."""
-    def lcm(a, b):
-        return (a * b) // gcd(a, b)
-    return reduce(lcm, numbers, 1)
+    return reduce(_lcm, numbers, 1)
 
 
 def gpf(n):
