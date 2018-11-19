@@ -854,8 +854,7 @@ class Chord():
             terms = [Fraction(x) for x in args.split(sep)]
             root = terms[0]
             terms = [root] + sorted(set(terms[1:]))
-            self._intervals = tuple(Interval(x, root)
-                                    for x in terms[1:])
+            self._intervals = tuple(Interval(x, root) for x in terms[1:])
 
         elif all([isinstance(x, Interval) for x in args]):
             """
