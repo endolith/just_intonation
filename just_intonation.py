@@ -784,7 +784,7 @@ class Chord():
     >>> Chord(4, 5, 6).steps
     (Interval(5, 4), Interval(6, 5))
     >>> Chord(4, 5, 6).all_steps
-    set([Interval(5, 4), Interval(3, 2), Interval(6, 5)])
+    {Interval(5, 4), Interval(6, 5), Interval(3, 2)}
 
     as well as the limits:
 
@@ -1411,14 +1411,11 @@ def test_chord():
 
 
 if __name__ == "__main__":
+    # Test doctests
     import doctest
     doctest.testmod()
     # TODO: this is screwing up IPython's _
 
+    # Test assertions
     import pytest
     pytest.main(['--tb=short', __file__])
-
-#    import nose
-#    result = nose.run()
-
-    pass
