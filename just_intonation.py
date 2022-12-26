@@ -318,6 +318,10 @@ class Interval(object):
         notes in the scale even if they are high odd-limit relative to the
         root.
         """
+        # https://en.xen.wiki/w/2-limit includes unisons (special case)
+        if a._numerator == a._denominator == 1:
+            return 2
+
         # "For a ratio n/d in lowest terms, to find its prime
         # limit, take the product n*d and factor it.  Then report the
         # largest prime you used in the factorization."
@@ -1105,6 +1109,7 @@ P8 = Interval('P8')
 def test_gpf():
     # http://oeis.org/A006530/list
     max_factors = (
+        (1, 1),
         (2, 2), (3, 3), (4, 2), (5, 5), (6, 3), (7, 7), (8, 2), (9, 3),
         (10, 5), (11, 11), (12, 3), (13, 13), (14, 7), (15, 5), (16, 2),
         (17, 17), (18, 3), (19, 19), (20, 5), (21, 7), (22, 11), (23, 23),
@@ -1181,6 +1186,14 @@ def test_interval():
 
     # http://en.wikipedia.org/wiki/Prime_limit#Examples
     limits = {
+        # https://en.xen.wiki/w/2-limit [prime limit]
+        # "unisons, octaves and stacks of octaves"
+        # https://en.xen.wiki/w/1-odd-limit
+        # "only the unison (and all it's octavations)."
+        (1, 1): (1, 2),
+        (2, 1): (1, 2),
+        (4, 1): (1, 2),
+
         (3, 2): (3, 3),
         (4, 3): (3, 3),
         (5, 4): (5, 5),
@@ -1215,7 +1228,14 @@ def test_interval():
 
     # http://www.patmissin.com/tunings/tun1.html
     assert Interval('1:1').odd_limit == 1
-    assert Interval('1:1').prime_limit == 1
+    # assert Interval('1:1').prime_limit == 1  # Contradicts below link
+
+    # http://www.tonalsoft.com/enc/l/limit.aspx#MainContent
+    assert Interval('1:4').prime_limit == 2
+    assert Interval('1:2').prime_limit == 2
+    assert Interval('1:1').prime_limit == 2
+    assert Interval('2:1').prime_limit == 2
+    assert Interval('4:1').prime_limit == 2
 
     # http://xenharmonic.wikispaces.com/share/view/69124170
     assert Interval('10:3').odd_limit == 5
