@@ -108,7 +108,7 @@ class Interval(object):
     Intervals are relative distances between pitches on a musical scale (in
     logarithmic frequency space).  Mathematical operations are handled
     accordingly, so multiplication becomes addition, powers become
-    multiplication, etc.:
+    multiplication, etc.:[1]_ [2]_
 
     >>> Fraction(5, 4) * Fraction(6, 5)
     Fraction(3, 2)
@@ -174,8 +174,13 @@ class Interval(object):
     >>> P5 * 12 - P8 * 7
     Interval(531441, 524288)
 
-    References:
-    Interval math http://www.moz.ac.at/sem/lehre/lib/bib/software/cm/Notes_from_the_Metalevel/scales.html#sec_15-3-2
+    References
+    ----------
+    .. [1] Heinrich Konrad Taube, "Notes from the Metalevel", Chapter 15
+       "Microtonality, Tunings and Modes", section "Interval Math".
+       https://web.archive.org/web/20151014145657/http://www.moz.ac.at/sem/lehre/lib/bib/software/cm/Notes_from_the_Metalevel/scales.html#sec_15-3-2
+    .. [2] misotanni, "The FJS Crash Course", Lesson 0: Preliminary
+       https://misotanni.github.io/fjs/en/crash.html#lesson-0
     """
 
     # Use __new__ not __init__ so that these are immutable?
