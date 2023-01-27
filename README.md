@@ -1,4 +1,5 @@
 # Just intonation classes
+[![Actions Status](https://github.com/endolith/just_intonation/workflows/Python%20package/badge.svg)](https://github.com/endolith/just_intonation/actions)
 
 This is for experimenting with [Just intonation](https://en.wikipedia.org/wiki/Just_intonation) (music made from frequency ratio relationships rather than equal divisions of the octave).  This module provides:
 
