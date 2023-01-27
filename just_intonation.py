@@ -21,20 +21,34 @@ except ImportError:
 abbreviations = {
     'P1':  (1, 1),
     'm2':  (16, 15),
-    'M2':  (9, 8),  # or 10:9
+    # 10:9 = M2^5 in FJS
+    'M2':  (9, 8),
+
+    # https://en.wikipedia.org/wiki/Septimal_whole_tone
     'S2':  (8, 7),  # Septimal major second
     'SM2': (8, 7),  # Septimal major second
+
+    # https://en.wikipedia.org/wiki/Septimal_minor_third
     's3':  (7, 6),  # Septimal minor third
     'sm3': (7, 6),  # Septimal minor third
-    'm3':  (6, 5),  # or 19:16
+
+    # 19:16 = m3^{19} in FJS
+    'm3':  (6, 5),
     'M3':  (5, 4),
     'P4':  (4, 3),
     'P5':  (3, 2),
-    'A5':  (25, 16),  # Augmented fifth
-    'm6':  (8, 5),    # or 11:7 undecimal minor sixth
-    'M6':  (5, 3),    # or 12:7 is septimal major sixth
+
+    # https://www.huygens-fokker.org/docs/intervals.html
+    'A5':  (25, 16),  # Classic augmented fifth (not in FJS?)
+
+    'm6':  (8, 5),
+    'M6':  (5, 3),
+    # 12:7 is septimal major sixth = M6_7 in FJS
+
+    # https://en.xen.wiki/w/16/9 FJS name is m7
     'm7':  (16, 9),   # "small just minor seventh"
-    # or 9:5 "large just minor seventh"
+
+    # 9:5 "large just minor seventh" = m7_5 in FJS
     'M7':  (15, 8),
     'P8':  (2, 1),
     }
