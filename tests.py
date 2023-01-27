@@ -1,3 +1,5 @@
+from just_intonation import *
+
 def test_gpf():
     # http://oeis.org/A006530/list
     max_factors = (
