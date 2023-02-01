@@ -350,7 +350,7 @@ class Interval(object):
         """
 
 
-        ref: http://xenharmonic.wikispaces.com/Kees+Height
+        ref: https://en.xen.wiki/w/Kees_semi-height
         """
         # "To find its odd limit, simply divide n by 2 until you can no
         # longer divide it without a remainder, then do the same for d.
@@ -371,7 +371,7 @@ class Interval(object):
         which is simply the numerator multiplied by the denominator of the
         frequency ratio in simplest form.
 
-        ref: http://xenharmonic.wikispaces.com/Benedetti+height
+        ref: https://en.xen.wiki/w/Benedetti_height
         """
         return a._numerator * a._denominator
 

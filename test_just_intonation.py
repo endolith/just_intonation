@@ -78,7 +78,6 @@ def test_interval():
     # Properties
 #    assert Interval('6:5').name == 'minor third'
 
-    # http://en.wikipedia.org/wiki/Prime_limit#Examples
     limits = {
         # https://en.xen.wiki/w/2-limit [prime limit]
         # "unisons, octaves and stacks of octaves"
@@ -88,6 +87,7 @@ def test_interval():
         (2, 1): (1, 2),
         (4, 1): (1, 2),
 
+        # http://en.wikipedia.org/wiki/Prime_limit#Examples
         (3, 2): (3, 3),
         (4, 3): (3, 3),
         (5, 4): (5, 5),
@@ -104,17 +104,17 @@ def test_interval():
         assert Interval(*interval).odd_limit == odd_limit
         assert Interval(*interval).prime_limit == prime_limit
 
-    # http://xenharmonic.wikispaces.com/3-limit
+    # https://en.xen.wiki/w/3-limit
     for x in ('128/81', '16/9', '243/128', '256/243', '27/16', '3/2', '32/27',
               '4/3', '81/64', '9/8'):
         assert Interval(x).prime_limit == 3
 
-    # http://xenharmonic.wikispaces.com/5-limit
+    # https://en.xen.wiki/w/5-limit
     for x in ('10/9', '15/8', '16/15', '27/20', '40/27', '5/3', '5/4', '6/5',
               '8/5', '81/80', '9/5'):
         assert Interval(x).prime_limit == 5
 
-    # http://xenharmonic.wikispaces.com/Odd+limit
+    # https://en.xen.wiki/w/Odd_limit
     for x in ('3/2', '5/4', '7/6', '10/7', '12/7', '9/8', '14/9'):
         assert Interval(x).odd_limit <= 9
     assert Interval('11/9').odd_limit > 9
@@ -131,7 +131,7 @@ def test_interval():
     assert Interval('2:1').prime_limit == 2
     assert Interval('4:1').prime_limit == 2
 
-    # http://xenharmonic.wikispaces.com/share/view/69124170
+    # http://xenharmonic.wikispaces.com/share/view/69124170 [???]
     assert Interval('10:3').odd_limit == 5
     assert Interval(12).odd_limit == 3
     assert Interval(3).odd_limit == 3
@@ -190,12 +190,12 @@ def test_interval():
         assert (Interval(x) + 3*P8).odd_limit <= 11
         assert (Interval(x) - 2*P8).odd_limit <= 11
 
-    # http://xenharmonic.wikispaces.com/Kees+Height
+    # https://en.xen.wiki/w/Kees_semi-height
     assert Interval('5/3').kees_height == 5
     assert Interval('4/3').kees_height == 3
     assert Interval('2/1').kees_height == 1
 
-    # http://xenharmonic.wikispaces.com/Kees+Height
+    # https://en.xen.wiki/w/Kees_semi-height
     for frac, ben, tenney in (('3/2',     6, 2.585),
                               ('6/5',    30, 4.907),
                               ('9/7',    63, 5.977),
@@ -203,7 +203,7 @@ def test_interval():
         assert Interval(frac).benedetti_height == ben
         assert round(Interval(frac).tenney_height - tenney, 3) == 0
 
-    # http://xenharmonic.wikispaces.com/Tenney+Height
+    # https://en.xen.wiki/w/Tenney_height
     for frac, ket, tenney in (('1/1', '|0>',        0           ),
                               ('2/1', '|1>',        1           ),
                               ('3/2', '|-1 1>',     2.5849625007),
