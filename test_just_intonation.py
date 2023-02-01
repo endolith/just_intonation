@@ -106,12 +106,12 @@ def test_interval():
 
     # https://en.xen.wiki/w/3-limit
     for x in ('128/81', '16/9', '243/128', '256/243', '27/16', '3/2', '32/27',
-              '4/3', '81/64', '9/8'):
+              '4/3', '81/64', '9/8', '2187/2048', '8192/6561', '1024/729'):
         assert Interval(x).prime_limit == 3
 
     # https://en.xen.wiki/w/5-limit
     for x in ('10/9', '15/8', '16/15', '27/20', '40/27', '5/3', '5/4', '6/5',
-              '8/5', '81/80', '9/5'):
+              '8/5', '81/80', '9/5', '135/128', '1215/1024', '256/135'):
         assert Interval(x).prime_limit == 5
 
     # https://en.xen.wiki/w/Odd_limit
@@ -191,12 +191,29 @@ def test_interval():
         assert (Interval(x) - 2*P8).odd_limit <= 11
 
     # https://en.xen.wiki/w/Kees_semi-height
+    assert Interval('7/4').kees_height == 7
+    assert Interval('7/5').kees_height == 7
+    assert Interval('7/6').kees_height == 7
+    assert Interval('8/7').kees_height == 7
     assert Interval('5/3').kees_height == 5
+    assert Interval('8/5').kees_height == 5
+    assert Interval('5/4').kees_height == 5
+    assert Interval('6/5').kees_height == 5
     assert Interval('4/3').kees_height == 3
+    assert Interval('3/2').kees_height == 3
     assert Interval('2/1').kees_height == 1
+    assert Interval('9/5').kees_height == 9
+    assert Interval('10/9').kees_height == 9
+    assert Interval('15/14').kees_height == 15
+    assert Interval('28/15').kees_height == 15
+    assert Interval('25/26').kees_height == 25
+    assert Interval('27/25').kees_height == 27
+    assert Interval('25/24').kees_height == 25
 
-    # https://en.xen.wiki/w/Kees_semi-height
-    for frac, ben, tenney in (('3/2',     6, 2.585),
+    # https://en.xen.wiki/w/Benedetti_height
+    for frac, ben, tenney in (('1/1',     1, 0),
+                              ('2/1',     2, 1),
+                              ('3/2',     6, 2.585),
                               ('6/5',    30, 4.907),
                               ('9/7',    63, 5.977),
                               ('13/11', 143, 7.160)):
