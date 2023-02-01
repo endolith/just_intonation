@@ -8,7 +8,6 @@ import math
 from fractions import Fraction
 from numbers import Rational
 from itertools import combinations
-import math
 from functools import reduce
 
 try:
