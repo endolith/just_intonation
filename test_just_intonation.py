@@ -256,6 +256,17 @@ def test_interval():
                               ('7/4', '|-2 0 0 1>', 4.8073549220),):
         assert round(Interval(frac).tenney_height - tenney, 8) == 0
 
+    # https://en.xen.wiki/w/Special:WhatLinksHere/Weil_height
+    for frac, weil in (('100/97',  100),
+                       ('108/77',  108),
+                       ('10/7',     10),
+                       ('289/288', 289),
+
+                        # Also some with larger denominator
+                       ('2/3', 3),
+                       ('1/4', 4)):
+        assert Interval(frac).weil_height == weil
+
     # https://en.wikipedia.org/wiki/Complement_(music)
     assert Interval('M3').complement == Interval('m6')
     assert Interval('P1').complement == Interval('P8')
@@ -403,7 +414,7 @@ def test_chord():
 
     # http://www.tallkite.com/misc_files/alt-tuner_manual_and_primer.pdf
     # "A major chord 1/1 – 5/4 – 3/2 has an odd limit of 5, regardless of
-    # the voicing."
+    # the voicing."  (Uses en dash instead of hyphen)
     assert Chord('1/1 – 5/4 – 3/2').odd_limit == 5
     assert Chord('1/1 – 5/4 – 3/2').inversion(1).odd_limit == 5
     assert Chord('1/1 – 5/4 – 3/2').inversion(2).odd_limit == 5

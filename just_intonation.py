@@ -362,6 +362,16 @@ class Interval(object):
             return a._denominator
 
     @property
+    def weil_height(a):
+        """
+        "If p/q is a positive rational number reduced to its lowest terms, then
+        the [multiplicative] Weil height is the integer max(p,q)."
+
+        ref: https://en.xen.wiki/w/Weil_height
+        """
+        return max(a._numerator, a._denominator)
+
+    @property
     def benedetti_height(a):
         """
         The measure of inharmonicity used by Giovanni Battista Benedetti,
