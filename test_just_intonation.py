@@ -1,4 +1,6 @@
-from just_intonation import *
+from just_intonation import Interval, Pitch, Chord
+from just_intonation import P1, m2, M2, m3, M3, P4, P5, m6, M6, m7, M7, P8
+from just_intonation import gpf
 
 def test_gpf():
     # http://oeis.org/A006530/list
