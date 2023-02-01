@@ -348,7 +348,8 @@ class Interval(object):
     @property
     def kees_height(a):
         """
-
+        "The set of JI intervals with Kees semi-height less than or equal to an
+        odd integer q comprises the q odd limit."
 
         ref: https://en.xen.wiki/w/Kees_semi-height
         """
