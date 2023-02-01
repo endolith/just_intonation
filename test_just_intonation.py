@@ -1,7 +1,7 @@
 import pytest
 from just_intonation import Interval, Pitch, Chord
 from just_intonation import P1, m2, M2, m3, M3, P4, P5, m6, M6, m7, M7, P8
-from just_intonation import gpf
+from just_intonation import _gpf
 
 
 def test_gpf():
@@ -23,10 +23,10 @@ def test_gpf():
         (1000, 5), (1021, 1021),
     )
     for n, m in max_factors:
-        assert gpf(n) == m
+        assert _gpf(n) == m
 
     with pytest.raises(ValueError):
-        gpf(-1)
+        _gpf(-1)
 
 
 def test_interval():

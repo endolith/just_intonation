@@ -48,27 +48,27 @@ abbreviations = {
     }
 
 
-def _lcm(a, b):
+def _lcm_pairwise(a, b):
     return (a * b) // math.gcd(a, b)
 
 
-def gcd_rationals(a, b):
+def _gcd_rationals(a, b):
     num_gcd = math.gcd(a.numerator, b.numerator)
-    denom_lcm = _lcm(a.denominator, b.denominator)
+    denom_lcm = _lcm_pairwise(a.denominator, b.denominator)
     return Fraction(num_gcd, denom_lcm)
 
 
-def gcd(*numbers):
+def _gcd(*numbers):
     """Return the greatest common divisor of the given integers."""
-    return reduce(gcd_rationals, numbers)
+    return reduce(_gcd_rationals, numbers)
 
 
-def lcm(*numbers):
+def _lcm(*numbers):
     """Return lowest common multiple."""
-    return reduce(_lcm, numbers, 1)
+    return reduce(_lcm_pairwise, numbers, 1)
 
 
-def gpf(n):
+def _gpf(n):
     """
     Find the greatest prime factor of n.
     """
@@ -90,7 +90,7 @@ def _F(a):
     return Fraction(a.numerator, a.denominator)
 
 
-def is_odd(n):
+def _is_odd(n):
     return bool(n % 2)
 
 
@@ -263,7 +263,7 @@ class Interval(object):
         Interval(3, 2)
         """
 
-        g = gcd(numerator, denominator)
+        g = _gcd(numerator, denominator)
         self._numerator = numerator // g
         self._denominator = denominator // g
         self._terms = self._denominator, self._numerator
@@ -311,11 +311,11 @@ class Interval(object):
         num = a._numerator
         den = a._denominator
         while True:
-            if is_odd(num) and is_odd(den):
+            if _is_odd(num) and _is_odd(den):
                 return max(num, den)
-            elif is_odd(num):
+            elif _is_odd(num):
                 den = den // 2
-            elif is_odd(den):
+            elif _is_odd(den):
                 num = num // 2
             else:  # pragma: no cover
                 raise Exception('Programming mistake: {}:{}'.format(num, den))
@@ -339,7 +339,7 @@ class Interval(object):
         # "For a ratio n/d in lowest terms, to find its prime
         # limit, take the product n*d and factor it.  Then report the
         # largest prime you used in the factorization."
-        return max(gpf(a._numerator), gpf(a._denominator))
+        return max(_gpf(a._numerator), _gpf(a._denominator))
 
     @property
     def kees_height(a):
@@ -353,12 +353,12 @@ class Interval(object):
         # longer divide it without a remainder, then do the same for d.
         # Then report the larger of the two numbers left over."
         # Numerator and denominator are already in reduced form.
-        if is_odd(a._numerator) and is_odd(a._denominator):
+        if _is_odd(a._numerator) and _is_odd(a._denominator):
             return max(a._numerator, a._denominator)
-        elif is_odd(a._numerator):
+        elif _is_odd(a._numerator):
             return a._numerator
         else:
-            assert is_odd(a._denominator)
+            assert _is_odd(a._denominator)
             return a._denominator
 
     @property
@@ -893,7 +893,7 @@ class Chord():
             """
             self._intervals = tuple(sorted(set(args)))
             fractions = sorted([_F(x) for x in set(args)])
-            l = lcm(*[x.denominator for x in fractions])
+            l = _lcm(*[x.denominator for x in fractions])
             terms = [l, ]
             terms.extend([x.numerator * l/x.denominator for x in fractions])
             assert all(int(x) == x for x in terms)
@@ -932,7 +932,7 @@ class Chord():
                 except TypeError:
                     raise ValueError('Chord construction args "{}" '
                                      'not understood'.format(args))
-            l = lcm(*[x.denominator for x in fractions])
+            l = _lcm(*[x.denominator for x in fractions])
             terms = [l, ]
             terms.extend([x.numerator * l/x.denominator for x in fractions])
             assert all(int(x) == x for x in terms)
@@ -941,7 +941,7 @@ class Chord():
             terms = [root] + sorted(set(terms[1:]))
             self._intervals = tuple(Interval(x, root) for x in terms[1:])
 
-        g = gcd(*terms)
+        g = _gcd(*terms)
         self._terms = tuple(n // g for n in terms)
         self._steps = tuple([self._intervals[0]] +
                             [j-i for i, j in
