@@ -1,7 +1,7 @@
 """
-Created on Wed Jul 30 18:55:13 2014
+Classes for Just intonation music theory experiments in Python.
 
-Classes for Just intonation music theory experiments in Python
+Created on Wed Jul 30 18:55:13 2014
 """
 
 import math
@@ -64,7 +64,7 @@ def gcd_rationals(a, b):
 
 
 def gcd(*numbers):
-    """Return the greatest common divisor of the given integers"""
+    """Return the greatest common divisor of the given integers."""
     return reduce(gcd_rationals, numbers)
 
 
@@ -75,7 +75,7 @@ def lcm(*numbers):
 
 def gpf(n):
     """
-    Find the greatest prime factor of n
+    Find the greatest prime factor of n.
     """
     if n < 1:
         raise ValueError('{} does not have a prime factorization'.format(n))
@@ -199,7 +199,7 @@ class Interval(object):
     # Use __new__ not __init__ so that these are immutable?
     def __init__(self, numerator, denominator=None):
         """
-        Constructs a musical interval
+        Construct a musical interval.
         """
         if numerator == 0:
             raise ValueError('No such thing as 0 interval')
@@ -276,21 +276,22 @@ class Interval(object):
     @property
     def numerator(a):
         """
-        Numerator of the frequency ratio
+        Numerator of the frequency ratio.
         """
         return a._numerator
 
     @property
     def denominator(a):
         """
-        Denominator of the frequency ratio
+        Denominator of the frequency ratio.
         """
         return a._denominator
 
     @property
     def complement(a):
         """
-        The musical complement, or inversion, of the interval.
+        Return the musical complement, or inversion, of the interval.
+
         When summed, an interval and its complement produce an octave.
         """
         return P8 - a
@@ -550,7 +551,7 @@ class Interval(object):
             return (a._numerator == b.numerator and
                     a._denominator == b.denominator)
         else:
-            return False # TODO: or NotImplemented??
+            return False  # TODO: or NotImplemented??
 
     def __lt__(a, b):
         """a < b"""
@@ -592,7 +593,7 @@ class Interval(object):
 
 class Pitch(object):
     """
-    A musical pitch, an absolute location in logarithmic frequency space
+    A musical pitch, an absolute location in logarithmic frequency space.
 
     Can be summed with intervals to produce other pitches, etc.
 
@@ -633,7 +634,7 @@ class Pitch(object):
 
     def __init__(self, frequency):
         """
-        Constructs a musical pitch from a frequency
+        Construct a musical pitch from a frequency.
         """
         if isinstance(frequency, Pitch):
             self._frequency = frequency.frequency
@@ -653,7 +654,7 @@ class Pitch(object):
     @property
     def frequency(a):
         """
-        Frequency of the pitch in hertz
+        Frequency of the pitch in hertz.
         """
         return a._frequency
 
@@ -738,7 +739,7 @@ class Pitch(object):
 
 class Chord():
     """
-    A combination of notes separated by just intervals
+    A combination of notes separated by just intervals.
 
     Chords can be constructed several ways.  For instance, the major chord can
     be constructed from a list of (possibly fractional) frequency ratio terms:
@@ -837,8 +838,8 @@ class Chord():
 
     def __init__(self, *args):
         """
-        Constructs a musical chord from a series of intervals relative to
-        the root
+        Construct a musical chord from a series of intervals relative to
+        the root.
         """
         if len(args) == 1 and isinstance(args[0], str):
             """
@@ -956,21 +957,21 @@ class Chord():
     @property
     def terms(a):
         """
-        List of terms in the frequency ratio that makes up the chord
+        List of terms in the frequency ratio that makes up the chord.
         """
         return a._terms
 
     @property
     def intervals(a):
         """
-        List of musical intervals that make up the chord, relative to the root
+        List of musical intervals that make up the chord, relative to the root.
         """
         return a._intervals
 
     @property
     def steps(a):
         """
-        List of musical intervals which, stacked together, produce the chord
+        List of musical intervals which, stacked together, produce the chord.
         """
         return a._steps
 
@@ -986,6 +987,7 @@ class Chord():
     def odd_limit(a):
         """
         The highest odd limit of any interval found in the Chord.
+
         So the "dyadic odd-limit"? or intervallic
 
         For example:
@@ -1018,7 +1020,7 @@ class Chord():
     @property
     def prime_limit(a):
         """
-        The highest prime limit of any interval found in the Chord
+        The highest prime limit of any interval found in the Chord.
 
         "intervallic limit"
 
@@ -1033,7 +1035,9 @@ class Chord():
 
     def inversion(self, n):
         """
-        Return the nth inversion of a chord.  The first inversion moves the
+        Return the nth inversion of a chord.
+
+        The first inversion moves the
         root an octave up and uses the next term as the root.  The second
         inversion moves that tone up an octave, etc.
         """

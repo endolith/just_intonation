@@ -2,6 +2,7 @@ from just_intonation import Interval, Pitch, Chord
 from just_intonation import P1, m2, M2, m3, M3, P4, P5, m6, M6, m7, M7, P8
 from just_intonation import gpf
 
+
 def test_gpf():
     # http://oeis.org/A006530/list
     max_factors = (
@@ -139,6 +140,7 @@ def test_interval():
     assert Interval(3).odd_limit == 3
 
     # http://www.tonalsoft.com/enc/l/limit.aspx
+    # Representation of 2-dimensional infinite set
     for x in ('81/64', '81/32', '81/16', '81/8', '81/4', '81/2',
               '27/32', '27/16', '27/8', '27/4', '27/2',
               '9/16', '9/8', '9/4', '9/2', '9/1', '18/1', '36/1', '72/1',
@@ -230,6 +232,7 @@ def test_interval():
                               ('7/4', '|-2 0 0 1>', 4.8073549220),):
         assert round(Interval(frac).tenney_height - tenney, 8) == 0
 
+
 def test_pitch():
     # Construction
     assert Pitch(100) == Pitch(100)
@@ -248,6 +251,7 @@ def test_pitch():
 
     # Properties
     assert Pitch(440).frequency == 440
+
 
 def test_chord():
     # Construction
