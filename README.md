@@ -41,12 +41,18 @@ Probably all of this is redundant with [Scala](http://www.huygens-fokker.org/sca
    - object-oriented Python
    - unit testing
 
-# Examples
+
+## Installation
+One possibility is to install with pip from GitHub:
+
+    pip install git+https://github.com/endolith/just_intonation.git
+
+## Examples
 
 * [Everything is a power chord in just intonation](https://soundcloud.com/endolith/everything-is-a-power-chord-in-just-intonation) - Dyads made from the harmonic series, first in piano, then undistorted guitar, then distorted guitar.
 * [Enumerating the rationals](https://soundcloud.com/endolith/enumerating-the-rationals) - A small portion of the Calkin-Wilf sequence, played on a fractal piano with an infinite number of keys.
 
-# To do
+## To do
 
 - [ ] Maybe odd-limit and prime-limit should be objects rather than properties?
 ["The limit" is a set of intervals](https://en.xen.wiki/w/Odd_limit), and includes 
