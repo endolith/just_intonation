@@ -51,12 +51,3 @@ One possibility is to install with pip from GitHub:
 
 * [Everything is a power chord in just intonation](https://soundcloud.com/endolith/everything-is-a-power-chord-in-just-intonation) - Dyads made from the harmonic series, first in piano, then undistorted guitar, then distorted guitar.
 * [Enumerating the rationals](https://soundcloud.com/endolith/enumerating-the-rationals) - A small portion of the Calkin-Wilf sequence, played on a fractal piano with an infinite number of keys.
-
-## To do
-
-- [ ] Maybe odd-limit and prime-limit should be objects rather than properties?
-["The limit" is a set of intervals](https://en.xen.wiki/w/Odd_limit), and includes 
-all intervals of `<=` a certain
-height, so `.kees_height` should be the property name and `OddLimit` should be a class?
-But that would be an infinite set?  Would it actually be useful?
-- [ ] Provide `otonal_limit` and `intervallic_limit` of chord.  Be precise in terminology.
