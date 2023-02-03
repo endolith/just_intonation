@@ -69,7 +69,7 @@ def test_interval():
     assert (Interval(1, 3)*5) / 5 == Interval(1, 3)
     assert (Interval(3, 2)*5) / 5 == Interval(3, 2)
 
-    with pytest.raises(ValueError, match='can only be multiplied by integers'):
+    with pytest.raises(TypeError, match='can only be multiplied by integers'):
         P5 * P8
 
     with pytest.raises(ValueError, match='cannot be divided exactly'):

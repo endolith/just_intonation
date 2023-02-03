@@ -425,9 +425,8 @@ class Interval(object):
             if int(b) == b:
                 return Interval(_F(a) ** int(b))
             else:
-                raise ValueError('Intervals can only be '
-                                 'multiplied by integers')
-        except AttributeError:
+                raise TypeError
+        except (TypeError, AttributeError):
             raise TypeError('Intervals can only be multiplied by integers')
 
     __rmul__ = __mul__
