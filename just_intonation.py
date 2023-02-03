@@ -572,10 +572,6 @@ class Interval(object):
         """int(a)"""
         return int(a._numerator / a._denominator)
 
-    def __long__(a):
-        """long(a)"""
-        return int(a._numerator / a._denominator)
-
     def __float__(a):
         """float(a)"""
         return float(a._numerator / a._denominator)
@@ -720,10 +716,6 @@ class Pitch(object):
         return (a._frequency == b.frequency)
 
     def __int__(a):
-        """int(a)"""
-        return int(a._frequency)
-
-    def __long__(a):
         """int(a)"""
         return int(a._frequency)
 
