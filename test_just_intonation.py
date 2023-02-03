@@ -1,3 +1,4 @@
+import pytest
 from just_intonation import Interval, Pitch, Chord
 from just_intonation import P1, m2, M2, m3, M3, P4, P5, m6, M6, m7, M7, P8
 from just_intonation import gpf
@@ -23,6 +24,9 @@ def test_gpf():
     )
     for n, m in max_factors:
         assert gpf(n) == m
+
+    with pytest.raises(ValueError):
+        gpf(-1)
 
 
 def test_interval():
@@ -60,9 +64,19 @@ def test_interval():
     assert P8*4 == Interval(16, 1)
     assert Interval(8) / 3 == P8
     assert Interval(8) / P8 == 3
+    assert Interval(8) / Interval(3) == pytest.approx(1.892789260714372)
     assert Interval('P5') * 4 / 4 == Interval('P5')
     assert (Interval(1, 3)*5) / 5 == Interval(1, 3)
     assert (Interval(3, 2)*5) / 5 == Interval(3, 2)
+
+    with pytest.raises(ValueError, match='can only be multiplied by integers'):
+        P5 * P8
+
+    with pytest.raises(ValueError, match='cannot be divided exactly'):
+        P8 / 12
+
+    with pytest.raises(TypeError, match='unsupported operand type'):
+        P8 / 3.14
 
     # Floor division and modulo
     assert Interval(3) // P8 == 1
@@ -73,6 +87,16 @@ def test_interval():
     assert Interval(8) // 3 == Interval(2, 1)
     assert Interval(3) % Interval('P8') == Interval(3, 2)
     assert Interval(5) % Interval('P8') == Interval(5, 4)
+
+    with pytest.raises(TypeError, match='unsupported operand type'):
+        P8 // 3.14
+
+    # Inequalities
+    assert P8 > m3
+    assert P8 >= M2
+    assert P4 < P5
+    assert M3 <= m6
+    assert bool(P1)
 
     # "The harmonic seventh may be derived from the harmonic series as the
     # interval between the seventh harmonic and the fourth harmonic"
@@ -232,6 +256,33 @@ def test_interval():
                               ('7/4', '|-2 0 0 1>', 4.8073549220),):
         assert round(Interval(frac).tenney_height - tenney, 8) == 0
 
+    # https://en.wikipedia.org/wiki/Complement_(music)
+    assert Interval('M3').complement == Interval('m6')
+    assert Interval('P1').complement == Interval('P8')
+    assert Interval('P4').complement == Interval('P5')
+
+    # https://en.xen.wiki/w/Octave_complement
+    assert Interval('m3').complement == Interval('M6')
+
+    # String representation
+    assert str(Interval(5, 4)) == '5:4'
+    assert str(Interval(7)) == '7:1'
+    assert str(P5*12 - P8*7) == '531441:524288'
+
+    # Numerical representation
+    assert int(Interval(7)) == 7
+    assert float(Interval(3, 2)) == pytest.approx(1.5)
+
+    # Invalid inputs
+    with pytest.raises(ValueError, match='No such thing'):
+        Interval(0)
+
+    with pytest.raises(ValueError, match='Invalid literal'):
+        Interval('spam')
+
+    with pytest.raises(TypeError, match='should be a string or a Rational'):
+        Interval([1, 2])
+
 
 def test_pitch():
     # Construction
@@ -251,6 +302,32 @@ def test_pitch():
 
     # Properties
     assert Pitch(440).frequency == 440
+
+    # Inequalities
+    assert Pitch(440) > Pitch(220)
+    assert Pitch(440) >= Pitch(220)
+    assert Pitch(100) < Pitch(200)
+    assert Pitch(1000) <= Pitch(1000)
+    assert bool(Pitch(150))
+
+    # String representation
+    assert str(Pitch(440)) == '440.0 Hz'
+
+    # Numerical representation
+    assert float(Pitch(100)) == 100
+
+    # Invalid input
+    with pytest.raises(ValueError, match='cannot be negative'):
+        Pitch(-440)
+
+    with pytest.raises(ValueError, match='cannot be negative'):
+        -Pitch(440)
+
+    with pytest.raises(TypeError, match='unsupported operand type'):
+        Pitch(440) + 440
+
+    with pytest.raises(TypeError, match='unsupported operand type'):
+        Pitch(440) - 440
 
 
 def test_chord():
@@ -344,6 +421,18 @@ def test_chord():
     assert Chord('1/1, 8/5, 4/3, 8/7').prime_limit == 7
     assert Chord('1/1, 9/8, 5/4, 11/8, 3/2, 7/4').prime_limit == 11
     assert Chord('1/1, 16/9, 8/5, 16/11, 4/3, 8/7').prime_limit == 11
+
+    assert Chord(4, 5, 6).all_steps == {M3, m3, P5}
+
+    # String representation
+    assert str(Chord(4, 5, 6)) == '4:5:6'
+
+    # Invalid input
+    with pytest.raises(ValueError, match='not understood'):
+        Chord('major')
+
+    with pytest.raises(ValueError, match='not understood'):
+        Chord([4, 5, 6])
 
 
 if __name__ == "__main__":

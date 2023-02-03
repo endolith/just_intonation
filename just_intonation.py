@@ -317,8 +317,8 @@ class Interval(object):
                 den = den // 2
             elif is_odd(den):
                 num = num // 2
-            else:
-                raise Exception('programming mistake: {}:{}'.format(num, den))
+            else:  # pragma: no cover
+                raise Exception('Programming mistake: {}:{}'.format(num, den))
 
     @property
     def prime_limit(a):
@@ -1035,9 +1035,9 @@ class Chord():
                 terms = terms + [terms.pop(0)*2]  # I'm surprised this works
             elif terms[1] < terms[0]:
                 terms = terms + [terms.pop(1)*2]  # I'm surprised this works
-            else:
+            else:  # pragma: no cover
                 # shouldn't be possible, I think
-                raise Exception('Programming error')
+                raise Exception('Programming mistake')
 
             root = terms[0]
             terms = [root] + sorted(set(terms[1:]))
