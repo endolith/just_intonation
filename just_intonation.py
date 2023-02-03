@@ -5,16 +5,11 @@ Created on Wed Jul 30 18:55:13 2014
 """
 
 import math
+from math import log2
 from fractions import Fraction
 from numbers import Rational
 from itertools import combinations
 from functools import reduce
-
-try:
-    from math import log2
-except ImportError:
-    def log2(x):
-        return math.log(x, 2)
 
 
 abbreviations = {
