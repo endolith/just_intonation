@@ -10,7 +10,7 @@ import time
 from fractions import Fraction
 from threading import Timer  # :D
 
-# modded for pitch bend: https://github.com/endolith/pygame/blob/master/lib/midi.py
+# modded for pitch bend: https://github.com/pygame/pygame/pull/394
 from pygame import midi
 
 import random
