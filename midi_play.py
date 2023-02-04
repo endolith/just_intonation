@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Tue Aug 26 22:27:10 2014
 
@@ -7,7 +6,6 @@ own channel, pitch bend them by less than one semitone to correct the pitch
 and then play them all at once
 """
 
-from __future__ import division, print_function
 import time
 from fractions import Fraction
 from threading import Timer  # :D
