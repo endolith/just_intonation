@@ -6,9 +6,11 @@
 Welcome to just_intonation's documentation!
 ===========================================
 
+.. mdinclude:: ../README.md
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Classes documentation:
 
    just_intonation
 
