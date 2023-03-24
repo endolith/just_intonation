@@ -10,11 +10,11 @@ Welcome to just_intonation's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   just_intonation
 
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
