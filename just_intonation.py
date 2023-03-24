@@ -814,6 +814,7 @@ class Chord():
     5
 
     Musical inversion moves the lowest tone an octave higher:
+
     >>> Chord(4, 5, 6).inversion(1)
     Chord(5, 6, 8)
     >>> Chord(4, 5, 6).inversion(2)
