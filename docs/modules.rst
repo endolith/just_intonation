@@ -5,4 +5,3 @@ just_intonation
    :maxdepth: 4
 
    just_intonation
-   midi_play
