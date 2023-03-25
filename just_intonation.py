@@ -1,8 +1,8 @@
 """
 Classes for Just intonation music theory experiments in Python.
-
-Created on Wed Jul 30 18:55:13 2014
 """
+
+# Created on Wed Jul 30 18:55:13 2014
 
 import math
 from math import log2
