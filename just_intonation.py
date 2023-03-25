@@ -893,9 +893,9 @@ class Chord():
             """
             self._intervals = tuple(sorted(set(args)))
             fractions = sorted([_F(x) for x in set(args)])
-            l = _lcm(*[x.denominator for x in fractions])
-            terms = [l, ]
-            terms.extend([x.numerator * l/x.denominator for x in fractions])
+            lcm = _lcm(*[x.denominator for x in fractions])
+            terms = [lcm, ]
+            terms.extend([x.numerator * lcm/x.denominator for x in fractions])
             assert all(int(x) == x for x in terms)
             terms = [int(x) for x in terms]
         elif all([isinstance(x, int) for x in args]):
@@ -932,9 +932,9 @@ class Chord():
                 except TypeError:
                     raise ValueError('Chord construction args "{}" '
                                      'not understood'.format(args))
-            l = _lcm(*[x.denominator for x in fractions])
-            terms = [l, ]
-            terms.extend([x.numerator * l/x.denominator for x in fractions])
+            lcm = _lcm(*[x.denominator for x in fractions])
+            terms = [lcm, ]
+            terms.extend([x.numerator * lcm/x.denominator for x in fractions])
             assert all(int(x) == x for x in terms)
             terms = [int(x) for x in terms]
             root = terms[0]
