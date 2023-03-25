@@ -450,7 +450,8 @@ class Interval(object):
         a / b
 
         Valid:
-        3*P8 / 3 = P8 (actually c**b = a <-> c = a^(1/b) <-> c = 10**(log10(a)/b))
+        3*P8 / 3 = P8 (actually c**b = a <-> c =
+                       a^(1/b) <-> c = 10**(log10(a)/b))
         3*P8 / P8 = 3 (actually b**c = a <-> c = log(a, base=b))
 
         Invalid:
@@ -1068,7 +1069,8 @@ class Chord():
         >>> Chord(4, 6, 8) == Chord(2, 3, 4)
         True
         """
-        return (a._terms == b._terms) # TODO: is this ok?  or only public properties?
+        # TODO: is this ok?  or only public properties?
+        return (a._terms == b._terms)
 
     def __neg__(a):
         """
