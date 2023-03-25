@@ -6,7 +6,7 @@ This is for experimenting with [Just intonation](https://en.wikipedia.org/wiki/J
 * `Interval(numerator, denominator)` - Represents musical [interval ratios](https://en.wikipedia.org/wiki/Interval_ratio)/[rational intervals](https://en.xen.wiki/w/Interval), a relative step between pitches
   * `.numerator` - Numerator after reducing to simplest form
   * `.denominator` - Denominator after reducing to simplest form
-  * `.complement` - The [inversion](https://en.wikipedia.org/wiki/Inversion_(music)#Intervals) or [octave complement](https://en.xen.wiki/w/Octave_complement) of the interval (P4 → P5, etc.)
+  * `.complement` - The [inversion](https://en.wikipedia.org/wiki/Inversion_%28music%29#Intervals) or [octave complement](https://en.xen.wiki/w/Octave_complement) of the interval (P4 → P5, etc.)
   * `.odd_limit` - [The smallest odd limit of an interval](https://en.xen.wiki/w/Odd_limit#Odd_limit_of_a_ratio)
   * `.prime_limit` - [Prime limit or harmonic limit of an interval](https://en.xen.wiki/w/Harmonic_limit)
   * `.kees_height` - [Kees semi-height](https://en.xen.wiki/w/Kees_semi-height)
