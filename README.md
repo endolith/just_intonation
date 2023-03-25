@@ -41,12 +41,6 @@ Probably all of this is redundant with [Scala](http://www.huygens-fokker.org/sca
    - Object-oriented Python
    - Unit testing
 
-
-## Installation
-One possibility is to install with pip from GitHub:
-
-    pip install git+https://github.com/endolith/just_intonation.git
-
 ## Usage
 
 ```py
@@ -62,6 +56,12 @@ True
 >>> Pitch(440) + P5
 Pitch(660)
 ```
+
+## Installation
+
+One possibility is to install with pip from GitHub:
+
+    pip install git+https://github.com/endolith/just_intonation.git
 
 ## Examples
 
