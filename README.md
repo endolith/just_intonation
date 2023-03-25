@@ -1,7 +1,7 @@
 # Just intonation classes
 [![Actions Status](https://github.com/endolith/just_intonation/workflows/Python%20package/badge.svg)](https://github.com/endolith/just_intonation/actions) [![codecov](https://codecov.io/gh/endolith/just_intonation/branch/master/graph/badge.svg?token=QQDWWPXA22)](https://codecov.io/gh/endolith/just_intonation)
 
-This is for experimenting with [Just intonation](https://en.wikipedia.org/wiki/Just_intonation) (music made from frequency ratio relationships rather than equal divisions of the octave).  This module provides:
+This module provides pure Python classes for experimenting with [Just intonation](https://en.wikipedia.org/wiki/Just_intonation) (music made from frequency ratio relationships rather than equal divisions of the octave):
 
 * `Interval(numerator, denominator)` - Represents musical [interval ratios](https://en.wikipedia.org/wiki/Interval_ratio)/[rational intervals](https://en.xen.wiki/w/Interval), a relative step between pitches
   * `.numerator` - Numerator after reducing to simplest form
@@ -35,17 +35,33 @@ This is for experimenting with [Just intonation](https://en.wikipedia.org/wiki/J
 
 Probably all of this is redundant with [Scala](http://www.huygens-fokker.org/scala/), but
 
-1. I don't know how to use it
+1. I don't know how to use it.
 2. I wanted to learn by doing:
    - Just Intonation
-   - object-oriented Python
-   - unit testing
+   - Object-oriented Python
+   - Unit testing
 
 
 ## Installation
 One possibility is to install with pip from GitHub:
 
     pip install git+https://github.com/endolith/just_intonation.git
+
+## Usage
+
+```py
+>>> Chord(4, 5, 6).intervals
+(Interval(5, 4), Interval(3, 2))
+
+>>> M3 + m3
+Interval(3, 2)
+
+>>> Interval('P5').complement == P4
+True
+
+>>> Pitch(440) + P5
+Pitch(660)
+```
 
 ## Examples
 
