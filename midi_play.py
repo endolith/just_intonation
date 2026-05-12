@@ -9,7 +9,6 @@ and then play them all at once
 
 from __future__ import division, print_function
 import time
-from fractions import Fraction
 from threading import Timer  # :D
 
 # modded for pitch bend: https://github.com/endolith/pygame/blob/master/lib/midi.py
@@ -18,18 +17,20 @@ from pygame import midi
 import random
 import math
 from numpy import arange
-from numpy.random import randint
-from just_intonation import (Interval, Pitch, Chord, P1, m2, M2, m3, M3,
-                             P4, P5, m6, M6, m7, M7, P8)
+from just_intonation import Interval, Pitch, Chord, m3, M3, P4, P5, P8
+
 
 rest = 0.5  # seconds
+
 
 def log2(x):
     return math.log(x, 2)
 
+
 def freq_to_MIDI(freq):
     A = 440
     return 12 * log2(freq / A) + 69
+
 
 midi.init()
 
@@ -47,6 +48,7 @@ else:
 
 channels = 16
 program = 0
+
 
 def play_freq(freq, duration=None, sustain=15):
     """
@@ -84,6 +86,7 @@ def play_freq(freq, duration=None, sustain=15):
         # Randomize by 10% so they don't all shut off at once
         rand = random.uniform(0.9, 1.1)
         Timer(sustain*rand, synth.note_off, (MIDI_note, 0, channel)).start()
+
 
 play_freq.channel = 0
 
@@ -158,6 +161,7 @@ def play_seq(pitch, intervals, rest=rest):
         play_freq(root + x)
         time.sleep(rest)
 
+
 pitch = Pitch(110)
 
 # Lydian mode
@@ -182,6 +186,7 @@ def equal_major():
 #    for note in [57, 61, 64]:
 #        synth.note_on(note, 127, 0)
 #        Timer(5, synth.note_off, (note, 0, 0)).start()
+
 
 def just_major():
     play_freq(Pitch(220), sustain=5)

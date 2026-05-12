@@ -834,7 +834,7 @@ class Chord():
     4th note of what scale?)
     """
 
-    def __init__(self, *args):
+    def __init__(self, *args):  # noqa: C901
         """
         Construct a musical chord from a series of intervals relative to
         the root.
