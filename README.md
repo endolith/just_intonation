@@ -66,10 +66,11 @@ One possibility is to install with pip from GitHub:
 ## MIDI playback (`midi_play.py`)
 
 `midi_play.py` is a small **demo / scratchpad**, not part of the installable
-`just_intonation` package. It sends notes to a **MIDI output device** using
-[pygame](https://www.pygame.org/)’s PortMidi wrapper. It does **not** produce
-audio by itself: you need a **second program** (a DAW, standalone synth, or
-similar) that listens on the **other end** of a **virtual MIDI cable**.
+`just_intonation` package. It sends notes to a **MIDI output port** using
+[mido](https://mido.readthedocs.io/) with the **[RtMidi](https://www.music.mcgill.ca/~gary/rtmidi/)**
+backend (`python-rtmidi`). It does **not** produce audio by itself: you need a
+**second program** (a DAW, standalone synth, or similar) that listens on the
+**other end** of a **virtual MIDI cable**.
 
 Rough signal path:
 
@@ -79,17 +80,19 @@ midi_play.py  --MIDI-->  virtual cable  --MIDI-->  softsynth / DAW  -->  audio
 
 ### Why setup is fiddly
 
-* The script used to assume **device id `3`** and a name containing **`LoopBe`**. That breaks as soon as you plug in a different USB interface or reorder drivers. It now **scans** output devices by default (see environment variables below).
+* The script used to assume **device id `3`** (pygame / PortMidi) and a name containing **`LoopBe`**. Port and index order still change when drivers or USB gear change; it now **scans** RtMidi output port **names** by default (see environment variables below).
 * **Pitch bend** is per **MIDI channel**. The script cycles channels so chords stay bent independently; channel **10** (GM drums) is skipped.
 * You must hear the **same synth** that receives the cable. If nothing is routed to the cable’s **input** side, you get silence even though the script runs.
 
 ### Dependencies
 
 ```bash
-pip install pygame numpy
+pip install -r requirements-midi.txt
 ```
 
-(`numpy` is only used for mode arrays at import time.)
+That installs **mido** with the **RtMidi** port driver and **numpy** (only used
+for the `lydian` / `locrian` mode arrays at import time). The main library and
+CI tests do not require these packages.
 
 ### Windows — LoopBe1 or loopMIDI
 
@@ -124,13 +127,13 @@ Typical pattern: create a writable **MIDI Through** or **virmidi** port, run
 # Example: FluidSynth with ALSA; names vary by distro / args.
 fluidsynth -a alsa -m alsa_seq /path/to/soundfont.sf2 &
 python -i midi_play.py &
-# List clients, then connect pygame’s output client to FluidSynth’s input:
+# List clients, then connect this script’s MIDI output client to FluidSynth:
 aconnect -l
 aconnect <pygame_sender> <fluidsynth_receiver>
 ```
 
 Exact client numbers change every run; use `aconnect -l` after starting both
-ends. If pygame lists **“Midi Through Port-0”** as an output, you can try:
+ends. If `mido.get_output_names()` lists **“Midi Through Port-0”** as an output, you can try:
 
 ```bash
 export JUST_INTONATION_MIDI_OUT_NAME="Midi Through"
@@ -144,7 +147,7 @@ between apps; others need **virmidi** — see your distro’s MIDI how‑tos).
 If auto‑detection picks the wrong port:
 
 1. Run once without fixing anything; the **`RuntimeError`** lists **all** MIDI
-   **output** devices pygame sees, with numeric ids.
+   **output** port names mido sees, with numeric indices.
 2. Pin the id:
 
    ```bash
@@ -158,8 +161,8 @@ If auto‑detection picks the wrong port:
    export JUST_INTONATION_MIDI_OUT_NAME=loopmidi
    ```
 
-PortMidi also supports **`PM_RECOMMENDED_OUTPUT_DEVICE`** (integer id or
-registry / env hints); see [pygame’s midi docs](https://www.pygame.org/docs/ref/midi.html).
+Other backends (PortMidi, etc.) are available in mido but not used by this
+script; see [mido backends](https://mido.readthedocs.io/en/stable/backends/index.html).
 
 ### Pitch‑bend detail
 
@@ -167,6 +170,9 @@ The script rounds each frequency to the nearest **MIDI note number**, then
 applies a **pitch wheel** offset for the remaining fraction of a semitone.
 Your synth should use the **default** bend range (**±2 semitones**); if it is
 configured differently, bends will sound wrong.
+
+(Earlier versions of this demo used **pygame** / PortMidi; pitch bend support
+landed upstream in pygame after [PR #394](https://github.com/pygame/pygame/pull/394).)
 
 ## Examples
 

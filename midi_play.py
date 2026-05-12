@@ -6,95 +6,87 @@ Each note uses its own MIDI channel so polyphony can stay in tune: the
 script picks the nearest MIDI note number and applies a small pitch-bend
 offset for the remaining cents.
 
-This module expects a *virtual MIDI cable* (or similar) as the PortMidi /
-pygame output device. You send MIDI from this script into the cable, and a
-separate synthesizer program listens on the other end of the cable.
+MIDI I/O uses `mido` with the **RtMidi** backend (`pip install mido[ports-rtmidi]`).
+You send messages from this script into a *virtual MIDI cable* (or similar),
+and a separate synthesizer listens on the other end.
 
-See the "MIDI playback" section in README.md for setup (LoopBe, loopMIDI,
-Linux ALSA routing, environment variables).
+See README.md (MIDI playback) for LoopBe / IAC / Linux routing and the
+``JUST_INTONATION_*`` environment variables.
 """
 
 from __future__ import division, print_function
 
+import atexit
 import os
 import time
 import random
 import math
 from threading import Timer
 
-# modded for pitch bend: https://github.com/endolith/pygame/blob/master/lib/midi.py
-from pygame import midi
+import mido
+
+mido.set_backend('mido.backends.rtmidi')
+
 from numpy import arange
 
 from just_intonation import Interval, Pitch, Chord, m3, M3, P4, P5, P8
 
 
-def _midi_device_name(device_info):
-    """Return a Unicode device name; pygame may give bytes on some platforms."""
-    name = device_info[1]
-    if isinstance(name, bytes):
-        return name.decode('utf-8', errors='replace')
-    return str(name)
+def _list_midi_output_names():
+    """Return output port names (RtMidi / mido order)."""
+    try:
+        return list(mido.get_output_names())
+    except Exception as exc:
+        raise RuntimeError(
+            'Could not list MIDI output ports (RtMidi failed during '
+            'enumeration). On Linux, ensure the ALSA sequencer is available '
+            '(often /dev/snd/seq) and ALSA MIDI packages are installed. '
+            'Original error:\n%s' % (exc,)) from exc
 
 
-def _list_midi_output_devices():
-    """Yield (device_id, name) for each PortMidi output device."""
-    for device_id in range(midi.get_count()):
-        info = midi.get_device_info(device_id)
-        if info is None:
-            continue
-        _interf, _name, is_input, is_output, _opened = info
-        if is_output:
-            yield device_id, _midi_device_name(info)
-
-
-def resolve_midi_output_device_id():
+def resolve_midi_output_port_name():
     """
-    Pick the pygame / PortMidi output device used by this script.
+    Return the name of the MIDI output port to open.
 
-    Resolution order:
-
-    1. If the environment variable ``JUST_INTONATION_MIDI_DEVICE_ID`` is set
-       to an integer, use that device id (must be an output device).
-    2. Otherwise scan outputs whose name contains the substring from
+    1. If ``JUST_INTONATION_MIDI_DEVICE_ID`` is set, treat it as a 0-based
+       index into ``mido.get_output_names()``.
+    2. Otherwise pick the first output whose name contains
        ``JUST_INTONATION_MIDI_OUT_NAME`` (default: ``loopbe``, case-insensitive).
-       This matches Windows *LoopBe1* ports ("LoopBe Internal MIDI", etc.).
     """
+    names = _list_midi_output_names()
     if 'JUST_INTONATION_MIDI_DEVICE_ID' in os.environ:
         device_id = int(os.environ['JUST_INTONATION_MIDI_DEVICE_ID'])
-        info = midi.get_device_info(device_id)
-        if info is None:
+        if device_id < 0 or device_id >= len(names):
             raise RuntimeError(
                 'JUST_INTONATION_MIDI_DEVICE_ID=%s is out of range '
-                '(midi.get_count() == %s).' % (device_id, midi.get_count()))
-        if not info[3]:
-            raise RuntimeError(
-                'JUST_INTONATION_MIDI_DEVICE_ID=%s is not a MIDI output.' % (
-                    device_id,))
-        return device_id
+                '(there are %s output ports).' % (device_id, len(names)))
+        return names[device_id]
 
     needle = os.environ.get(
         'JUST_INTONATION_MIDI_OUT_NAME', 'loopbe').lower()
-    outputs = list(_list_midi_output_devices())
-    for device_id, name in outputs:
+    for name in names:
         if needle in name.lower():
-            return device_id
+            return name
 
-    lines = ['No MIDI output device name contains %r.' % needle,
-             'Install a virtual MIDI cable (see README.md), then either',
-             '  set JUST_INTONATION_MIDI_OUT_NAME to a unique substring of',
-             '  its port name, or set JUST_INTONATION_MIDI_DEVICE_ID to a',
-             '  number from the list below.',
-             '',
-             'Available MIDI *output* devices:']
-    if not outputs:
-        lines.append('  (none — PortMidi sees no writable outputs; on Linux'
-                      ' check ALSA `seq` / `snd_seq` and that pygame was built'
-                      ' with MIDI support.)')
+    lines = [
+        'No MIDI output port name contains %r.' % needle,
+        'Install a virtual MIDI cable (see README.md), then either set',
+        'JUST_INTONATION_MIDI_OUT_NAME to a substring of the port name, or',
+        'JUST_INTONATION_MIDI_DEVICE_ID to an index from the list below.',
+        '',
+        'Available MIDI output ports (mido / RtMidi):',
+    ]
+    if not names:
+        lines.append(
+            '  (none — install python-rtmidi / ALSA seq as needed; see README.)')
     else:
-        for device_id, name in outputs:
-            lines.append('  %s: %s' % (device_id, name))
+        for i, name in enumerate(names):
+            lines.append('  %s: %s' % (i, name))
     raise RuntimeError('\n'.join(lines))
+
+
+def _clip_pitchwheel(value):
+    return max(mido.MIN_PITCHWHEEL, min(mido.MAX_PITCHWHEEL, int(value)))
 
 
 rest = 0.5  # seconds
@@ -109,14 +101,9 @@ def freq_to_MIDI(freq):
     return 12 * log2(freq / A) + 69
 
 
-midi.init()
-
-_output_id = resolve_midi_output_device_id()
-try:
-    synth = midi.Output(_output_id)
-except Exception:
-    midi.quit()
-    raise
+_midi_port_name = resolve_midi_output_port_name()
+midi_port = mido.open_output(_midi_port_name)
+atexit.register(midi_port.close)
 
 channels = 16
 program = 0
@@ -134,7 +121,7 @@ def play_freq(freq, duration=None, sustain=15):
     MIDI_float = freq_to_MIDI(float(freq))
     MIDI_note = int(round(MIDI_float))
     frac = MIDI_float - MIDI_note
-    bend_amount = int(frac * 4096)
+    bend_amount = _clip_pitchwheel(frac * 4096)
 
     channel = play_freq.channel
     play_freq.channel += 1
@@ -146,18 +133,27 @@ def play_freq(freq, duration=None, sustain=15):
         play_freq.channel += 1
         play_freq.channel %= channels
 
-    synth.set_instrument(program, channel)
-    synth.pitch_bend(bend_amount, channel)
+    midi_port.send(mido.Message(
+        'program_change', channel=channel, program=program))
+    midi_port.send(mido.Message(
+        'pitchwheel', channel=channel, pitch=bend_amount))
     velocity = random.randint(110, 127)  # Humanize
-    synth.note_on(MIDI_note, velocity, channel)
+    midi_port.send(mido.Message(
+        'note_on', channel=channel, note=MIDI_note, velocity=velocity))
     if duration is not None:
         time.sleep(duration)
-        synth.note_off(MIDI_note, 0, channel)
+        midi_port.send(mido.Message(
+            'note_off', channel=channel, note=MIDI_note, velocity=0))
     else:
         # Prevents synth from choking on all the tails of notes
         # Randomize by 10% so they don't all shut off at once
         rand = random.uniform(0.9, 1.1)
-        Timer(sustain * rand, synth.note_off, (MIDI_note, 0, channel)).start()
+
+        def _note_off():
+            midi_port.send(mido.Message(
+                'note_off', channel=channel, note=MIDI_note, velocity=0))
+
+        Timer(sustain * rand, _note_off).start()
 
 
 play_freq.channel = 0
@@ -247,17 +243,15 @@ locrian = sorted(arange(7) * P4 % P8) + [P8]
 
 # Equal:
 def equal_major():
-    synth.set_instrument(program, channel=0)
-    synth.pitch_bend(0, channel=0)
+    midi_port.send(mido.Message(
+        'program_change', channel=0, program=program))
+    midi_port.send(mido.Message('pitchwheel', channel=0, pitch=0))
     for note in [57, 61, 64]:
-        synth.note_on(note, 127, 0)
-        Timer(5, synth.note_off, (note, 0, 0)).start()
+        midi_port.send(mido.Message(
+            'note_on', channel=0, note=note, velocity=127))
+        Timer(5, lambda n=note: midi_port.send(mido.Message(
+            'note_off', channel=0, note=n, velocity=0))).start()
         time.sleep(1)
-#    synth.set_instrument(program,channel=1)
-#    synth.pitch_bend(channel=1)
-#    for note in [57, 61, 64]:
-#        synth.note_on(note, 127, 0)
-#        Timer(5, synth.note_off, (note, 0, 0)).start()
 
 
 def just_major():
@@ -271,11 +265,14 @@ def just_major():
 
 
 def equal_minor():
-    synth.set_instrument(program, channel=0)
-    synth.pitch_bend(0, channel=0)
+    midi_port.send(mido.Message(
+        'program_change', channel=0, program=program))
+    midi_port.send(mido.Message('pitchwheel', channel=0, pitch=0))
     for note in [57, 60, 64]:
-        synth.note_on(note, 127, 0)
-        Timer(5, synth.note_off, (note, 0, 0)).start()
+        midi_port.send(mido.Message(
+            'note_on', channel=0, note=note, velocity=127))
+        Timer(5, lambda n=note: midi_port.send(mido.Message(
+            'note_off', channel=0, note=n, velocity=0))).start()
         time.sleep(1)
 
 
