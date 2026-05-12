@@ -59,9 +59,21 @@ Pitch(660)
 
 ## Installation
 
-One possibility is to install with pip from GitHub:
+From PyPI (when published):
+
+    pip install just_intonation
+
+From the repository root (editable install for development):
+
+    pip install -e ".[test]"
+
+From GitHub without cloning:
 
     pip install git+https://github.com/endolith/just_intonation.git
+
+The optional `midi` extra installs dependencies for `midi_play.py` (pygame, numpy):
+
+    pip install "just_intonation[midi]"
 
 ## Examples
 

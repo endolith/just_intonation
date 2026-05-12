@@ -1,3 +1,2 @@
-# Testing
-pytest
-pytest-cov
+# Development / CI: install the project with test dependencies (see pyproject.toml).
+-e .[test]
