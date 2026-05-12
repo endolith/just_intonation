@@ -266,7 +266,6 @@ class Interval(object):
         g = _gcd(numerator, denominator)
         self._numerator = numerator // g
         self._denominator = denominator // g
-        self._terms = self._denominator, self._numerator
 
     @property
     def numerator(a):
@@ -414,6 +413,7 @@ class Interval(object):
         """
         if isinstance(b, Interval):
             return Interval(_F(a) * _F(b))
+        return NotImplemented
 
     def __sub__(a, b):
         """
@@ -422,6 +422,7 @@ class Interval(object):
         """
         if isinstance(b, Interval):
             return Interval(_F(a) / _F(b))
+        return NotImplemented
 
     def __mul__(a, b):
         """
@@ -552,26 +553,33 @@ class Interval(object):
 
     def __eq__(a, b):
         """a == b"""
-        if isinstance(b, Interval):
-            return (a._numerator == b.numerator and
-                    a._denominator == b.denominator)
-        else:
-            return False  # TODO: or NotImplemented??
+        if not isinstance(b, Interval):
+            return NotImplemented
+        return (a._numerator == b.numerator and
+                a._denominator == b.denominator)
 
     def __lt__(a, b):
         """a < b"""
+        if not isinstance(b, Interval):
+            return NotImplemented
         return _F(a) < _F(b)
 
     def __gt__(a, b):
         """a > b"""
+        if not isinstance(b, Interval):
+            return NotImplemented
         return _F(a) > _F(b)
 
     def __le__(a, b):
         """a <= b"""
+        if not isinstance(b, Interval):
+            return NotImplemented
         return _F(a) <= _F(b)
 
     def __ge__(a, b):
         """a >= b"""
+        if not isinstance(b, Interval):
+            return NotImplemented
         return _F(a) >= _F(b)
 
     def __bool__(a):
@@ -647,7 +655,7 @@ class Pitch(object):
             self._frequency = Fraction(frequency)
 
         if int(self._frequency) == self._frequency:
-            self._frequency = int(frequency)
+            self._frequency = int(self._frequency)
 
         if self._frequency < 0:
             raise ValueError('Pitch frequency cannot be negative')
@@ -699,19 +707,27 @@ class Pitch(object):
 
     def __lt__(a, b):
         """a < b"""
-        return a._frequency < b.frequency
+        if not isinstance(b, Pitch):
+            return NotImplemented
+        return a._frequency < b._frequency
 
     def __gt__(a, b):
         """a > b"""
-        return a._frequency > b.frequency
+        if not isinstance(b, Pitch):
+            return NotImplemented
+        return a._frequency > b._frequency
 
     def __le__(a, b):
         """a <= b"""
-        return a._frequency <= b.frequency
+        if not isinstance(b, Pitch):
+            return NotImplemented
+        return a._frequency <= b._frequency
 
     def __ge__(a, b):
         """a >= b"""
-        return a._frequency >= b.frequency
+        if not isinstance(b, Pitch):
+            return NotImplemented
+        return a._frequency >= b._frequency
 
     def __bool__(a):
         """a != 0"""
@@ -723,7 +739,12 @@ class Pitch(object):
 
     def __eq__(a, b):
         """a == b"""
-        return (a._frequency == b.frequency)
+        if not isinstance(b, Pitch):
+            return NotImplemented
+        return a._frequency == b._frequency
+
+    def __hash__(self):
+        return hash(self._frequency)
 
     def __int__(a):
         """int(a)"""
@@ -734,7 +755,7 @@ class Pitch(object):
         return float(a._frequency)
 
 
-class Chord():
+class Chord:
     """
     A combination of notes separated by just intervals.
 
@@ -1069,8 +1090,12 @@ class Chord():
         >>> Chord(4, 6, 8) == Chord(2, 3, 4)
         True
         """
-        # TODO: is this ok?  or only public properties?
-        return (a._terms == b._terms)
+        if not isinstance(b, Chord):
+            return NotImplemented
+        return a._terms == b._terms
+
+    def __hash__(self):
+        return hash(self._terms)
 
     def __neg__(a):
         """

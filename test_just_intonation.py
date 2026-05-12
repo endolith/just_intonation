@@ -355,7 +355,7 @@ def test_chord():
     assert Chord(Interval('3:2'), Interval(2)) == Chord(2, 3, 4)
     assert Chord(Interval('M3'), Interval('m3')) == Chord(20, 24, 25)
     assert Chord(M3) == Chord(4, 5)
-    assert Chord(M3) == Interval(5, 4)  # Is this ok?
+    assert Chord(M3) != Interval(5, 4)
     assert Chord(M3, m3) == Chord(20, 24, 25)
     assert Chord(M3, P5) == Chord(4, 5, 6)
     assert Chord(P5, M3) == Chord(4, 5, 6)
