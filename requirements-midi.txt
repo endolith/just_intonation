@@ -1,0 +1,3 @@
+# Optional: for midi_play.py (mido + RtMidi + numpy mode arrays)
+mido[ports-rtmidi]>=1.3
+numpy>=1.19
