@@ -29,7 +29,7 @@ def test_gpf():
         _gpf(-1)
 
 
-def test_interval():
+def test_interval():  # noqa: C901
     # Construction
     assert Interval(3, 2) == Interval(3, 2)
     assert Interval('P5') == Interval(3, 2)
@@ -249,10 +249,10 @@ def test_interval():
         assert round(Interval(frac).tenney_height - tenney, 3) == 0
 
     # https://en.xen.wiki/w/Tenney_height
-    for frac, ket, tenney in (('1/1', '|0>',        0           ),
-                              ('2/1', '|1>',        1           ),
-                              ('3/2', '|-1 1>',     2.5849625007),
-                              ('5/4', '|-2 0 1>',   4.3219280948),
+    for frac, ket, tenney in (('1/1', '|0>', 0),
+                              ('2/1', '|1>', 1),
+                              ('3/2', '|-1 1>', 2.5849625007),
+                              ('5/4', '|-2 0 1>', 4.3219280948),
                               ('7/4', '|-2 0 0 1>', 4.8073549220),):
         assert round(Interval(frac).tenney_height - tenney, 8) == 0
 
@@ -261,8 +261,7 @@ def test_interval():
                        ('108/77',  108),
                        ('10/7',     10),
                        ('289/288', 289),
-
-                        # Also some with larger denominator
+                       # Also some with larger denominator
                        ('2/3', 3),
                        ('1/4', 4)):
         assert Interval(frac).weil_height == weil
@@ -370,7 +369,7 @@ def test_chord():
     assert Chord('1-5/4-3/2-5/3') == Chord(12, 15, 18, 20)
     assert Chord('1/1 – 5/4 – 3/2') == Chord(4, 5, 6)
     assert Chord('1:3:5:7:9') == Chord(1, 3, 5, 7, 9)  # otonal
-    assert Chord('1/9:1/7:1/5:1/3:1/1') == Chord(35, 45, 63, 105, 315) # utonal
+    assert Chord('1/9:1/7:1/5:1/3:1/1') == Chord(35, 45, 63, 105, 315)  # utonal
     assert Chord('3/2', '4/3') == Chord(6, 8, 9)
     assert Chord('4/3', '3/2') == Chord(6, 8, 9)
     assert Chord(('3:2'), 2) == Chord(2, 3, 4)
@@ -453,5 +452,4 @@ if __name__ == "__main__":
     # TODO: this is screwing up IPython's _
 
     # Test assertions
-    import pytest
     pytest.main(['--tb=short', __file__])
