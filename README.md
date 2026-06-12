@@ -1,5 +1,5 @@
 # Just intonation classes
-[![Actions Status](https://github.com/endolith/just_intonation/workflows/Python%20package/badge.svg)](https://github.com/endolith/just_intonation/actions) [![codecov](https://codecov.io/gh/endolith/just_intonation/branch/master/graph/badge.svg?token=QQDWWPXA22)](https://codecov.io/gh/endolith/just_intonation)
+[![Actions Status](https://github.com/endolith/just_intonation/actions/workflows/python-package.yml/badge.svg)](https://github.com/endolith/just_intonation/actions/workflows/python-package.yml) [![codecov](https://codecov.io/gh/endolith/just_intonation/branch/master/graph/badge.svg?token=QQDWWPXA22)](https://codecov.io/gh/endolith/just_intonation)
 
 This module provides pure Python classes for experimenting with [Just intonation](https://en.wikipedia.org/wiki/Just_intonation) (music made from frequency ratio relationships rather than equal divisions of the octave):
 
@@ -59,9 +59,39 @@ Pitch(660)
 
 ## Installation
 
-One possibility is to install with pip from GitHub:
+From PyPI (when published):
 
-    pip install git+https://github.com/endolith/just_intonation.git
+```bash
+pip install just_intonation
+```
+
+From the repository root (editable install for development):
+
+```bash
+pip install -e .
+```
+
+With **tests, coverage, and flake8** (as used in CI):
+
+```bash
+pip install -e ".[dev]"
+```
+
+From GitHub without cloning:
+
+```bash
+pip install "just_intonation @ git+https://github.com/endolith/just_intonation.git"
+```
+
+The optional `midi` extra installs dependencies for `midi_play.py` (pygame, numpy):
+
+```bash
+pip install "just_intonation[midi] @ git+https://github.com/endolith/just_intonation.git"
+```
+
+Dependencies are declared in **`pyproject.toml`** (PEP 621). The project is
+built with **[Hatchling](https://hatch.pypa.io/latest/)**. **Python 3.10+** is
+required (aligned with current Hatchling and CI).
 
 ## Examples
 
