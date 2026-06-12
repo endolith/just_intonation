@@ -39,6 +39,7 @@ include = [
     "/midi_play.py",
     "/.coveragerc",
     "/.github/workflows/python-package.yml",
+    "/.github/workflows/publish.yml",
 ]
 
 [tool.pytest.ini_options]
